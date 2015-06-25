@@ -1,0 +1,217 @@
+﻿<UserControl x:Class="Grabacr07.Mukyutter.Views.Twitter.Accounts.AccountView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:livet="http://schemas.livet-mvvm.net/2011/wpf"
+			 xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+			 xmlns:behaviors="clr-namespace:Grabacr07.Mukyutter.Views.Behaviors"
+			 xmlns:composing="clr-namespace:Grabacr07.Mukyutter.Views.Composing"
+			 xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+			 xmlns:account="clr-namespace:Grabacr07.Mukyutter.Views.Twitter.Accounts"
+			 xmlns:accountsVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter.Accounts"
+			 mc:Ignorable="d"
+			 d:DesignWidth="550"
+			 d:DataContext="{d:DesignInstance accountsVm:AccountViewModel, IsDesignTimeCreatable=False}"
+			 TextOptions.TextFormattingMode="Display"
+			 SnapsToDevicePixels="True">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<converters:UniversalBooleanToVisibilityConverter x:Key="UniversalBooleanToVisibilityConverter" />
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="64" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="64" />
+			<ColumnDefinition Width="10" />
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<Border Grid.RowSpan="3"
+				Background="{DynamicResource SemiactiveBackgroundBrushKey}" />
+
+		<Image Source="{Binding Path=Icon.Image, Mode=OneWay}" />
+
+		<Grid Grid.Column="2">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="10" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<controls:LinkButton Text="{Binding User.ScreenNameWithAtmark, Mode=OneWay}"
+									 FontFamily="Segoe UI Light"
+									 FontSize="28" />
+				<TextBlock Grid.Column="2"
+						   Text="{Binding User.Name, Mode=OneWay}"
+						   FontSize="18"
+						   VerticalAlignment="Bottom"
+						   TextTrimming="CharacterEllipsis"
+						   Margin="0,0,0,4" />
+			</Grid>
+
+			<Grid Grid.Row="2"
+				  Grid.Column="2">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="5" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<TextBlock Text="{Binding UserStreams.Message, Mode=OneWay}"
+						   Foreground="{DynamicResource ForegroundBrushKey}"
+						   FontSize="14"
+						   TextTrimming="CharacterEllipsis"
+						   Margin="3,0" />
+				<controls:ExpanderButton x:Name="ShowApiButton"
+										 Grid.Column="2"
+										 Content="API Details"
+										 FontFamily="Segoe UI Light"
+										 FontSize="18"
+										 IsChecked="False" />
+			</Grid>
+		</Grid>
+
+		<StackPanel Grid.Row="1"
+					Grid.Column="2"
+					Margin="20,3,0,3"
+					Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, ElementName=ShowApiButton}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="5" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<controls:PromptComboBox ItemsSource="{Binding Tokens}"
+										 SelectedItem="{Binding DisplayToken}"
+										 Background="Transparent"
+										 BorderBrush="Transparent"
+										 Margin="0,2">
+					<ComboBox.ItemTemplate>
+						<DataTemplate DataType="{x:Type accountsVm:TokenViewModel}">
+							<TextBlock Text="{Binding Path=AppName}"
+									   Foreground="{DynamicResource ForegroundBrushKey}"
+									   FontFamily="Segoe UI Light"
+									   FontSize="24"
+									   Margin="0,2" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</controls:PromptComboBox>
+
+				<TextBlock Grid.Column="3"
+						   Text="このトークンを使用しています。"
+						   Foreground="{DynamicResource AccentForegroundBrushKey}"
+						   VerticalAlignment="Bottom"
+						   Margin="0,3" />
+				<Button Grid.Column="3"
+						Content="このトークンを使用する"
+						VerticalAlignment="Bottom"
+						Margin="0,3" />
+			</Grid>
+			<Rectangle Height="1"
+					   Fill="{DynamicResource InactiveForegroundBrushKey}" />
+
+			<Grid Margin="0,3"
+				  DataContext="{Binding DisplayToken}">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+
+				<CheckBox x:Name="IsFallbackCheckBox"
+						  Grid.Column="0"
+						  VerticalAlignment="Center"
+						  IsChecked="{Binding IsFallback}">
+					<TextBlock Text="API 規制時のフォールバック"
+							   Foreground="{DynamicResource ActiveForegroundBrushKey}" />
+				</CheckBox>
+				<TextBlock Grid.Column="1"
+						   Text=":  "
+						   Foreground="{DynamicResource ActiveForegroundBrushKey}"
+						   Visibility="{Binding IsChecked, ConverterParameter=Visible:Hidden, Converter={StaticResource UniversalBooleanToVisibilityConverter}, ElementName=IsFallbackCheckBox}" />
+				<controls:PromptComboBox Grid.Column="2"
+										 Visibility="{Binding IsChecked, ConverterParameter=Visible:Hidden, Converter={StaticResource UniversalBooleanToVisibilityConverter}, ElementName=IsFallbackCheckBox}"
+										 ItemsSource="{Binding FallbackTokens}"
+										 SelectedItem="{Binding FallbackToken}"
+										 HorizontalAlignment="Left"
+										 Background="Transparent"
+										 BorderBrush="Transparent">
+					<controls:PromptComboBox.ItemTemplate>
+						<DataTemplate DataType="{x:Type accountsVm:AccountTokenPair}">
+							<StackPanel Orientation="Horizontal">
+								<Image Source="{Binding Account.User.Icon.Image}"
+									   Width="20"
+									   Height="20" />
+								<TextBlock Text="{Binding Account.User.ScreenNameWithAtmark}"
+										   Foreground="{DynamicResource ActiveForegroundBrushKey}"
+										   Margin="3,0" />
+								<TextBlock Text="&gt;"
+										   Foreground="{DynamicResource ActiveForegroundBrushKey}" />
+								<TextBlock Text="{Binding Token.AppName}"
+										   Foreground="{DynamicResource ActiveForegroundBrushKey}"
+										   Margin="3,0" />
+							</StackPanel>
+						</DataTemplate>
+					</controls:PromptComboBox.ItemTemplate>
+				</controls:PromptComboBox>
+			</Grid>
+
+			<ListBox Grid.IsSharedSizeScope="True"
+					 DataContext="{Binding DisplayToken}"
+					 ItemsSource="{Binding Endpoints}"
+					 Style="{DynamicResource FlatListViewer}">
+				<ListBox.ItemTemplate>
+					<DataTemplate DataType="{x:Type accountsVm:EndpointViewModel}">
+						<Grid Margin="8,3"
+							  HorizontalAlignment="Left">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition SharedSizeGroup="endpoint" />
+								<ColumnDefinition Width="15" />
+								<ColumnDefinition SharedSizeGroup="ratelimit_remaining" />
+								<ColumnDefinition SharedSizeGroup="ratelimit_slash" />
+								<ColumnDefinition SharedSizeGroup="ratelimit_limit" />
+								<ColumnDefinition Width="15" />
+								<ColumnDefinition SharedSizeGroup="ratelimit_reset" />
+								<ColumnDefinition Width="25" />
+								<ColumnDefinition SharedSizeGroup="api_override" />
+							</Grid.ColumnDefinitions>
+
+							<TextBlock Grid.Column="0"
+									   Text="{Binding Name, Mode=OneWay}"
+									   VerticalAlignment="Center"
+									   TextTrimming="CharacterEllipsis" />
+							<TextBlock Grid.Column="2"
+									   Text="{Binding ApiCurrent, Mode=OneWay}"
+									   HorizontalAlignment="Right"
+									   VerticalAlignment="Center" />
+							<TextBlock Grid.Column="3"
+									   Text=" / "
+									   VerticalAlignment="Center" />
+							<TextBlock Grid.Column="4"
+									   Text="{Binding ApiLimit, Mode=OneWay}"
+									   HorizontalAlignment="Right"
+									   VerticalAlignment="Center" />
+							<TextBlock Grid.Column="6"
+									   Text="{Binding ApiResetTime, Mode=OneWay}"
+									   VerticalAlignment="Center" />
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+		</StackPanel>
+	</Grid>
+</UserControl>

@@ -1,0 +1,256 @@
+﻿<chrome:MetroWindow x:Class="Grabacr07.Mukyutter.Views.NormalWindow"
+					xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+					xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					xmlns:livet="http://schemas.livet-mvvm.net/2011/wpf"
+					xmlns:v="clr-namespace:Grabacr07.Mukyutter.Views"
+					xmlns:vm="clr-namespace:Grabacr07.Mukyutter.ViewModels"
+					xmlns:chrome="clr-namespace:Grabacr07.Mukyutter.Views.Chrome"
+					xmlns:composing="clr-namespace:Grabacr07.Mukyutter.Views.Composing"
+					xmlns:behaviors="clr-namespace:Grabacr07.Mukyutter.Views.Behaviors"
+					xmlns:twitter="clr-namespace:Grabacr07.Mukyutter.Views.Twitter"
+					xmlns:development="clr-namespace:Grabacr07.Mukyutter.Views.Development"
+					xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+					mc:Ignorable="d"
+					x:Name="Window"
+					Title="{Binding Title}"
+					Width="{Binding Width}"
+					Height="{Binding Height}"
+					Left="{Binding Left, Mode=TwoWay}"
+					Top="{Binding Top, Mode=TwoWay}"
+					WindowState="{Binding WindowState}"
+					Background="{DynamicResource ThemeBrushKey}">
+
+	<d:DesignProperties.DataContext>
+		<vm:MainWindowViewModel />
+	</d:DesignProperties.DataContext>
+
+	<chrome:MetroWindow.WindowChrome>
+		<WindowChrome CaptionHeight="{Binding ActualHeight, ElementName=CaptionBar, Mode=OneWay}"
+					  ResizeBorderThickness="1"
+					  GlassFrameThickness="0"
+					  CornerRadius="0" />
+	</chrome:MetroWindow.WindowChrome>
+
+	<i:Interaction.Behaviors>
+		<behaviors:KeyBindingBehavior BindingKey="InputStatus"
+									  MethodTarget="{Binding Composer.CurrentStatus}"
+									  MethodName="Focus" />
+	</i:Interaction.Behaviors>
+
+	<i:Interaction.Triggers>
+		<i:EventTrigger EventName="ContentRendered">
+			<livet:LivetCallMethodAction MethodName="Initialize"
+										 MethodTarget="{Binding}" />
+		</i:EventTrigger>
+		<!--<i:EventTrigger EventName="Closed">
+			<livet:DataContextDisposeAction />
+		</i:EventTrigger>-->
+		<i:EventTrigger EventName="Activated">
+			<livet:WindowSetStateToSourceAction Source="{Binding IsActive}" />
+		</i:EventTrigger>
+		<i:EventTrigger EventName="Deactivated">
+			<livet:WindowSetStateToSourceAction Source="{Binding IsActive}" />
+		</i:EventTrigger>
+		<livet:InteractionMessageTrigger MessageKey="UpdateToSource/IsActive"
+										 Messenger="{Binding Messenger}">
+			<livet:WindowSetStateToSourceAction Source="{Binding IsActive}" />
+		</livet:InteractionMessageTrigger>
+		<livet:InteractionMessageTrigger MessageKey="WindowAction"
+										 Messenger="{Binding Messenger}">
+			<livet:WindowInteractionMessageAction />
+		</livet:InteractionMessageTrigger>
+
+		<livet:InteractionMessageTrigger MessageKey="Close/NormalWindow"
+										 Messenger="{Binding Messenger}">
+			<livet:WindowInteractionMessageAction InvokeActionOnlyWhenWindowIsActive="False" />
+		</livet:InteractionMessageTrigger>
+		<livet:InteractionMessageTrigger MessageKey="Open/MinimumWindow"
+										 Messenger="{Binding Messenger}">
+			<livet:TransitionInteractionMessageAction WindowType="{x:Type v:MinimumWindow}"
+													  IsOwned="False"
+													  InvokeActionOnlyWhenWindowIsActive="False" />
+		</livet:InteractionMessageTrigger>
+		<i:EventTrigger EventName="SizeChanged">
+			<livet:WindowSetStateToSourceAction Property="ActualWidth"
+												Source="{Binding Width}" />
+			<livet:WindowSetStateToSourceAction Property="ActualHeight"
+												Source="{Binding Height}" />
+		</i:EventTrigger>
+
+		<!--<ei:DataTrigger Binding="{Binding IsNotificationOverlay}"
+						Value="True">
+			<ei:ChangePropertyAction TargetName="Window"
+									 PropertyName="TaskbarItemInfo">
+				<ei:ChangePropertyAction.Value>
+					<TaskbarItemInfo Overlay="/Mukyutter;component/Images/Overlay/mention.png" />
+				</ei:ChangePropertyAction.Value>
+			</ei:ChangePropertyAction>
+
+		</ei:DataTrigger>-->
+	</i:Interaction.Triggers>
+
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="23" />
+		</Grid.RowDefinitions>
+
+		<!-- region Status area -->
+		<Grid Grid.Row="2"
+			  Background="{DynamicResource AccentBrushKey}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="8" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+
+			<chrome:ResizeGrip Grid.Column="3" />
+
+			<TextBlock Text="{Binding NotificationMessage}"
+					   Margin="5,0"
+					   Foreground="{DynamicResource AccentForegroundBrushKey}"
+					   TextTrimming="CharacterEllipsis" />
+
+			<!-- region 透過率コントロール -->
+
+			<!--<Grid Grid.Column="1">
+				<Grid.Resources>
+					<Style x:Key="StatusAreaButton"
+						   TargetType="{x:Type Button}">
+						<Setter Property="Foreground"
+								Value="{DynamicResource ActiveForegroundBrushKey}" />
+						<Setter Property="TextOptions.TextFormattingMode"
+								Value="Display" />
+						<Setter Property="FontSize"
+								Value="13" />
+						<Setter Property="FontWeight"
+								Value="Bold" />
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<ContentPresenter x:Name="presenter"
+													  VerticalAlignment="Center"
+													  SnapsToDevicePixels="True"
+													  Margin="2,0" />
+									<ControlTemplate.Triggers>
+										<Trigger Property="IsMouseOver"
+												 Value="True">
+											<Setter TargetName="presenter"
+													Property="Opacity"
+													Value="0.5" />
+										</Trigger>
+										<Trigger Property="IsPressed"
+												 Value="True">
+											<Setter TargetName="presenter"
+													Property="Opacity"
+													Value="0.5" />
+										</Trigger>
+									</ControlTemplate.Triggers>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</Grid.Resources>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="32" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+				<Button Grid.Column="0"
+						Content="-"
+						Margin="0,0,0,0"
+						Style="{DynamicResource StatusAreaButton}" />
+				<Slider Grid.Column="1"
+						Width="100"
+						Margin="1,0"
+						VerticalAlignment="Center"
+						Value="{Binding Opacity}"
+						Maximum="1"
+						LargeChange="0.1"
+						Minimum="0.2"
+						TickFrequency="0.1"
+						SmallChange="0.05"
+						Style="{DynamicResource FlatSliderStyleKey}" />
+				<Button Grid.Column="2"
+						Content="+"
+						Style="{DynamicResource StatusAreaButton}" />
+				<TextBlock Grid.Column="3"
+						   Text="{Binding OpacityPercent, Mode=OneWay}"
+						   Margin="5,2,0,0"
+						   HorizontalAlignment="Right"
+						   VerticalAlignment="Center" />
+				<TextBlock Grid.Column="4"
+						   Text=" %"
+						   Margin="0,2,0,0"
+						   VerticalAlignment="Center" />
+			</Grid>-->
+
+			<!-- endregion-->
+
+		</Grid>
+		<!-- endregion -->
+
+		<v:NormalWindowContent Grid.Row="1" />
+
+		<!-- #region CaptionBar -->
+		<Border x:Name="CaptionBar"
+				Grid.Row="0">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
+
+				<chrome:CaptionButton Grid.Column="0"
+									  Margin="0"
+									  Padding="10,7"
+									  Width="Auto"
+									  Height="Auto"
+									  WindowChrome.IsHitTestVisibleInChrome="True">
+					<Path Width="20"
+						  Height="20"
+						  Style="{DynamicResource ApplicationIconKey}" />
+				</chrome:CaptionButton>
+				<TextBlock Grid.Column="1"
+						   Text="{Binding Title}"
+						   FontFamily="Segoe UI"
+						   FontSize="17"
+						   Margin="3,8,8,8"
+						   VerticalAlignment="Center"
+						   TextTrimming="CharacterEllipsis"
+						   Opacity="0.85" />
+				<StackPanel Grid.Column="2"
+							Orientation="Horizontal"
+							HorizontalAlignment="Right"
+							VerticalAlignment="Top">
+					<chrome:CaptionButton>
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="Click">
+								<ei:CallMethodAction TargetObject="{Binding}"
+													 MethodName="MinimumMode" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</chrome:CaptionButton>
+					<chrome:CaptionButton WindowAction="Minimize"
+										  Visibility="{Binding CanMinimize, Converter={StaticResource BooleanToVisibilityConverter}}" />
+					<chrome:CaptionButton WindowAction="Maximize"
+										  Visibility="{Binding CanMaximize, Converter={StaticResource BooleanToVisibilityConverter}}" />
+					<chrome:CaptionButton WindowAction="Normalize"
+										  Visibility="{Binding CanNormalize, Converter={StaticResource BooleanToVisibilityConverter}}" />
+					<chrome:CaptionButton WindowAction="Close" />
+				</StackPanel>
+			</Grid>
+		</Border>
+		<!-- #endregion -->
+
+	</Grid>
+</chrome:MetroWindow>

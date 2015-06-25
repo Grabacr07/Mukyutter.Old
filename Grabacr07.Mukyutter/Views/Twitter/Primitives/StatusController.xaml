@@ -1,0 +1,138 @@
+﻿<UserControl x:Class="Grabacr07.Mukyutter.Views.Twitter.Primitives.StatusController"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+			 xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+			 xmlns:twitter="clr-namespace:Grabacr07.Mukyutter.Views.Twitter"
+			 xmlns:twitterVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter"
+			 xmlns:primitives="clr-namespace:Grabacr07.Mukyutter.Views.Twitter.Primitives"
+			 mc:Ignorable="d"
+			 d:DataContext="{d:DesignInstance d:Type=twitterVm:StatusViewModel}">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<Style TargetType="{x:Type Button}">
+				<Setter Property="ToolTipService.Placement"
+						Value="Bottom" />
+				<Setter Property="FocusVisualStyle"
+						Value="{DynamicResource {x:Static SystemParameters.FocusVisualStyleKey}}" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type Button}">
+							<Border x:Name="border"
+									Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type primitives:StatusController}}, Path=ButtonWidth}"
+									Background="{DynamicResource BackgroundBrushKey}"
+									BorderBrush="{DynamicResource BorderBrushKey}"
+									BorderThickness="1,1,0,1"
+									SnapsToDevicePixels="true">
+								<ContentPresenter x:Name="contentPresenter"
+												  Margin="0,4"
+												  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+												  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+							</Border>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsMouseOver"
+										 Value="True">
+									<Setter TargetName="border"
+											Property="Background"
+											Value="{DynamicResource ActiveBackgroundBrushKey}" />
+									<Setter Property="BorderBrush"
+											Value="{DynamicResource ActiveBorderBrushKey}" />
+								</Trigger>
+								<Trigger Property="IsPressed"
+										 Value="True">
+									<Setter TargetName="border"
+											Property="Background"
+											Value="{DynamicResource AccentBrushKey}" />
+									<Setter Property="BorderBrush"
+											Value="{DynamicResource ActiveBorderBrushKey}" />
+								</Trigger>
+								<Trigger Property="IsEnabled"
+										 Value="False">
+									<Setter TargetName="contentPresenter"
+											Property="Opacity"
+											Value="0.5" />
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<StackPanel Orientation="Horizontal"
+				IsEnabled="{Binding ValidAccount, Mode=OneWay}">
+		<Button ToolTip="このツイートに返信">
+			<twitter:TwitterIcon Type="Reply" />
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Click">
+					<ei:CallMethodAction TargetObject="{Binding}"
+										 MethodName="Reply" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</Button>
+
+		<Button ToolTip="このツイートを引用 (非公式 RT)"
+				Visibility="{Binding CanRetweet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+			<twitter:TwitterIcon Type="Quotation" />
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Click">
+					<ei:CallMethodAction TargetObject="{Binding}"
+										 MethodName="Quotation" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</Button>
+
+		<Button ToolTip="リツイート"
+				Visibility="{Binding CanRetweet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+			<twitter:TwitterIcon Type="Retweet" />
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Click">
+					<ei:CallMethodAction TargetObject="{Binding}"
+										 MethodName="Retweet" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</Button>
+
+		<Button ToolTip="お気に入りに登録"
+				Visibility="{Binding CanFavorite, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+			<twitter:TwitterIcon Type="Favorite" />
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Click">
+					<ei:CallMethodAction TargetObject="{Binding}"
+										 MethodName="Favorite" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</Button>
+
+		<Button ToolTip="お気に入りに登録してリツイート"
+				Visibility="{Binding CanFavAndRetweet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+			<twitter:TwitterIcon Type="FavAndRetweet" />
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Click">
+					<ei:CallMethodAction TargetObject="{Binding}"
+										 MethodName="Favorite" />
+					<ei:CallMethodAction TargetObject="{Binding}"
+										 MethodName="Retweet" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</Button>
+
+		<Button ToolTip="ツイートを削除"
+				Visibility="{Binding CanDelete, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+			<twitter:TwitterIcon Type="Delete" />
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Click">
+					<ei:CallMethodAction TargetObject="{Binding}"
+										 MethodName="Delete" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</Button>
+		<Border BorderBrush="{DynamicResource BorderBrushKey}"
+				BorderThickness="1,0,0,0" />
+	</StackPanel>
+</UserControl>

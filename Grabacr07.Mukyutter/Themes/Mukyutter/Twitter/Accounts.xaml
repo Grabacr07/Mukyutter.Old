@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+					xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+					xmlns:acocuntsVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter.Accounts">
+
+
+</ResourceDictionary>

@@ -1,0 +1,385 @@
+﻿<UserControl x:Class="Grabacr07.Mukyutter.Views.Twitter.StatusView2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+             xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+             xmlns:twitter="clr-namespace:Grabacr07.Mukyutter.Views.Twitter"
+             xmlns:twitterVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter"
+             xmlns:samples="clr-namespace:Grabacr07.Mukyutter.SampleData"
+             xmlns:events="clr-namespace:Grabacr07.Mukyutter.Views.Twitter.Events"
+             xmlns:imaging="clr-namespace:Grabacr07.Mukyutter.Models.Imaging"
+			 xmlns:primitives="clr-namespace:Grabacr07.Mukyutter.Views.Twitter.Primitives"
+			 mc:Ignorable="d"
+             d:DesignWidth="300"
+             SnapsToDevicePixels="True"
+             TextOptions.TextFormattingMode="Display">
+	<d:DesignProperties.DataContext>
+		<samples:SampleStatusViewModel />
+	</d:DesignProperties.DataContext>
+
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+		<converters:InvBooleanToVisibilityConverter x:Key="InvBooleanToVisibilityConverter" />
+
+		<Style x:Key="SubTextStyleKey"
+		       TargetType="{x:Type TextBlock}">
+			<Setter Property="Foreground"
+			        Value="{DynamicResource ForegroundBrushKey}" />
+			<Setter Property="FontSize"
+			        Value="11" />
+		</Style>
+	</UserControl.Resources>
+
+	<StackPanel Margin="5">
+		<Grid DataContext="{Binding DisplayStatus}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="8" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<Image Width="48"
+			       Source="{Binding User.Icon.Image, Mode=OneWay}"
+				   VerticalAlignment="Top" />
+			<Grid Grid.Column="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="1" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<controls:LinkButton Grid.ColumnSpan="2"
+				                     Text="{Binding User.Name, Mode=OneWay}"
+				                     FontSize="16"
+				                     TextWrapping="Wrap"
+				                     Margin="0,-2,0,0" />
+				<controls:LinkButton Grid.Row="2"
+				                     Grid.Column="1"
+				                     Text="{Binding User.ScreenNameWithAtmark, Mode=OneWay}"
+				                     FontSize="14"
+				                     Margin="0"
+				                     TextTrimming="CharacterEllipsis"
+				                     VerticalAlignment="Top"
+				                     Foreground="{DynamicResource ForegroundBrushKey}">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="Click">
+							<ei:CallMethodAction TargetObject="{Binding User}"
+							                     MethodName="OpenUserPage" />
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</controls:LinkButton>
+				<StackPanel Grid.Row="2"
+				            Orientation="Horizontal"
+				            VerticalAlignment="Bottom"
+				            Margin="0,2">
+					<twitter:TwitterIcon Type="PadLock"
+					                     Margin="2,0,3,0"
+					                     Visibility="{Binding User.Protected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" />
+				</StackPanel>
+			</Grid>
+		</Grid>
+
+		<controls:RichTextView Source="{Binding DisplayStatus.RichText}"
+		                       Margin="0,15,0,10">
+			<!-- #region DataTemplates -->
+			<DataTemplate DataType="{x:Type controls:Regular}">
+				<controls:RichTextInlinePresenter>
+					<Run Foreground="{DynamicResource ActiveForegroundBrushKey}"
+					     FontFamily="Meiryo UI"
+					     Text="{Binding Text}"
+					     FontSize="12" />
+				</controls:RichTextInlinePresenter>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type controls:Url}">
+				<controls:RichTextInlinePresenter>
+					<Hyperlink Cursor="Hand"
+					           Foreground="{DynamicResource LinkForegroundBrushKey}"
+					           FontFamily="Meiryo UI"
+					           FontSize="12">
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="MouseLeftButtonDown">
+								<ei:CallMethodAction MethodName="Click"
+								                     TargetObject="{Binding}" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+						<Run Text="{Binding Text}" />
+					</Hyperlink>
+				</controls:RichTextInlinePresenter>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type controls:Mention}">
+				<controls:RichTextInlinePresenter>
+					<Hyperlink Cursor="Hand"
+					           Foreground="{DynamicResource LinkForegroundBrushKey}"
+					           FontFamily="Meiryo UI"
+					           FontSize="12">
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="MouseLeftButtonDown">
+								<ei:CallMethodAction MethodName="Click"
+								                     TargetObject="{Binding}" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+						<Run Text="{Binding Text}" />
+					</Hyperlink>
+				</controls:RichTextInlinePresenter>
+			</DataTemplate>
+			<DataTemplate DataType="{x:Type controls:Hashtag}">
+				<controls:RichTextInlinePresenter>
+					<Hyperlink Cursor="Hand"
+					           Foreground="{DynamicResource LinkForegroundBrushKey}"
+					           FontFamily="Meiryo UI"
+					           FontSize="12">
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="MouseLeftButtonDown">
+								<ei:CallMethodAction MethodName="Click"
+								                     TargetObject="{Binding}" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+						<Run Text="{Binding Text}" />
+					</Hyperlink>
+				</controls:RichTextInlinePresenter>
+			</DataTemplate>
+			<!-- #endregion DataTemplates -->
+		</controls:RichTextView>
+
+		<ListView ItemsSource="{Binding Images}"
+		          Style="{DynamicResource FlatListViewer}">
+			<ListView.ItemTemplate>
+				<DataTemplate DataType="{x:Type imaging:WeakReferenceBitmap}">
+					<Image Source="{Binding Image}"
+						   Margin="0,1"
+						   StretchDirection="DownOnly" />
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+
+		<StackPanel Orientation="Vertical"
+		            Grid.IsSharedSizeScope="True">
+			<events:EventCounter Margin="0,2"
+			                     Icon="Favorite"
+			                     Foreground="{DynamicResource StarBrushKey}"
+			                     ItemsSource="{Binding FavoriteUsers}" />
+			<events:EventCounter Margin="0,2"
+			                     Icon="Retweet"
+			                     Foreground="{DynamicResource RetweetBrushKey}"
+			                     ItemsSource="{Binding RetweetUsers}" />
+		</StackPanel>
+
+		<Grid DataContext="{Binding DisplayStatus}"
+		      HorizontalAlignment="Right">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0"
+			           Text="via "
+			           Foreground="{DynamicResource ForegroundBrushKey}"
+			           FontSize="11" />
+			<TextBlock Grid.Column="1"
+			           Text="{Binding Client, Mode=OneWay}"
+			           Foreground="{DynamicResource ForegroundBrushKey}"
+			           FontSize="11"
+			           Visibility="{Binding CanOpenClientPage, Converter={StaticResource InvBooleanToVisibilityConverter}, Mode=OneWay}" />
+			<controls:LinkButton Grid.Column="1"
+			                     Text="{Binding Client, Mode=OneWay}"
+			                     FontSize="11"
+			                     HorizontalAlignment="Left"
+			                     Visibility="{Binding CanOpenClientPage, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<ei:CallMethodAction TargetObject="{Binding}"
+						                     MethodName="OpenClientPage" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</controls:LinkButton>
+		</Grid>
+
+		<StackPanel Orientation="Horizontal"
+		            DataContext="{Binding DisplayStatus}"
+		            HorizontalAlignment="Right">
+			<controls:LinkButton Text="{Binding AbsoluteDateTime, Mode=OneWay}"
+			                     FontSize="11">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<ei:CallMethodAction TargetObject="{Binding}"
+						                     MethodName="OpenStatusPage" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</controls:LinkButton>
+			<TextBlock Text=" ("
+			           Style="{DynamicResource SubTextStyleKey}" />
+			<TextBlock Text="{Binding RelativeDateTime, Mode=OneWay}"
+			           Style="{DynamicResource SubTextStyleKey}" />
+			<TextBlock Text=")"
+			           Style="{DynamicResource SubTextStyleKey}" />
+		</StackPanel>
+
+		<primitives:StatusController ButtonWidth="40"
+		                          Margin="0,6,0,0"
+		                          HorizontalAlignment="Right"
+		                          DataContext="{Binding DisplayStatus}" />
+
+		<StackPanel Visibility="{Binding IsRetweet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+			<Rectangle Height="1"
+			           Fill="{DynamicResource ForegroundBrushKey}"
+			           Margin="0,8,0,5"
+			           Opacity="0.5" />
+			<StackPanel Orientation="Horizontal"
+			            Margin="15,0,0,4">
+				<twitter:TwitterIcon Margin="0,0,3,0"
+				                     Type="Retweet" />
+				<TextBlock Text="Retweeted by "
+				           Style="{DynamicResource SubTextStyleKey}"
+				           FontSize="12" />
+			</StackPanel>
+			<Grid Margin="15,0,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="0" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<Image Width="30"
+				       Source="{Binding User.Icon.Image, Mode=OneWay}"
+				       VerticalAlignment="Top"
+				       Margin="3,0,5,0" />
+				<Grid Grid.Column="2">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="1" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+					<Grid HorizontalAlignment="Left">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+							<ColumnDefinition Width="5" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						<controls:LinkButton Grid.Column="1"
+						                     Text="{Binding User.Name, Mode=OneWay}"
+						                     FontSize="12" />
+						<controls:LinkButton Grid.Column="3"
+						                     Text="{Binding User.ScreenNameWithAtmark, Mode=OneWay}"
+						                     FontSize="11"
+						                     TextTrimming="CharacterEllipsis"
+						                     VerticalAlignment="Top"
+						                     Foreground="{DynamicResource ForegroundBrushKey}">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="Click">
+									<ei:CallMethodAction TargetObject="{Binding User}"
+									                     MethodName="OpenUserPage" />
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</controls:LinkButton>
+					</Grid>
+
+					<Grid Grid.Row="2">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0"
+						           Text="via "
+						           Foreground="{DynamicResource ForegroundBrushKey}"
+						           FontSize="11" />
+						<TextBlock Grid.Column="1"
+						           Text="{Binding Client, Mode=OneWay}"
+						           Foreground="{DynamicResource ForegroundBrushKey}"
+						           FontSize="11"
+						           Visibility="{Binding CanOpenClientPage, Converter={StaticResource InvBooleanToVisibilityConverter}, Mode=OneWay}" />
+						<controls:LinkButton Grid.Column="1"
+						                     Text="{Binding Client, Mode=OneWay}"
+						                     FontSize="11"
+						                     Visibility="{Binding CanOpenClientPage, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="Click">
+									<ei:CallMethodAction TargetObject="{Binding}"
+									                     MethodName="OpenClientPage" />
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</controls:LinkButton>
+					</Grid>
+				</Grid>
+			</Grid>
+		</StackPanel>
+
+		<!--<StackPanel Visibility="{Binding IsRetweet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+			<Rectangle Height="1"
+					   Fill="{DynamicResource ForegroundBrushKey}"
+					   Margin="0,5"
+					   Opacity="0.5" />
+			<Grid Margin="0,0,0,0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+				<twitter:TwitterIcon Visibility="{Binding User.Protected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+									 VerticalAlignment="Top"
+									 Margin="0,2" />
+				<Image Grid.Column="1"
+					   Width="30"
+					   Source="{Binding User.Icon, Mode=OneWay}"
+					   StretchDirection="DownOnly"
+					   VerticalAlignment="Top"
+					   Margin="5,1" />
+				<Grid Grid.Column="2"
+					  HorizontalAlignment="Left">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="2" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="5" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<TextBlock Text="Retweeted by "
+							   Style="{DynamicResource SubTextStyleKey}"
+							   FontSize="12" />
+					<controls:LinkButton Grid.Column="1"
+										 Text="{Binding User.Name, Mode=OneWay}"
+										 FontSize="12" />
+					<Grid Grid.Row="2"
+						  Grid.ColumnSpan="4">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+						<TextBlock Grid.Column="0"
+								   Text="via "
+								   Foreground="{DynamicResource ForegroundBrushKey}"
+								   FontSize="11" />
+						<TextBlock Grid.Column="1"
+								   Text="{Binding Client, Mode=OneWay}"
+								   Foreground="{DynamicResource ForegroundBrushKey}"
+								   FontSize="11"
+								   Visibility="{Binding CanOpenClientPage, Converter={StaticResource InvBooleanToVisibilityConverter}, Mode=OneWay}" />
+						<controls:LinkButton Grid.Column="1"
+											 Text="{Binding Client, Mode=OneWay}"
+											 FontSize="11"
+											 HorizontalAlignment="Left"
+											 Visibility="{Binding CanOpenClientPage, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="Click">
+									<ei:CallMethodAction TargetObject="{Binding}"
+														 MethodName="OpenClientPage" />
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</controls:LinkButton>
+					</Grid>
+				</Grid>
+			</Grid>
+		</StackPanel>-->
+	</StackPanel>
+</UserControl>

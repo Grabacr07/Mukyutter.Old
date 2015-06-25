@@ -1,0 +1,30 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					xmlns:presentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+					mc:Ignorable="presentationOptions">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/CommonControls/EditBox.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/CommonControls/ExpanderButton.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/CommonControls/PromptTextBox.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/CommonControls/PromptComboBox.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/CommonControls/LinkButton.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/CommonControls/RichTextView.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/CommonControls/Spinner.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Twitter/TimelineView.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Twitter/TwitterIcon.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Twitter/EventCounter.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/TabHeader.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Chrome/MetroWindowStyle.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Chrome/GlowWindowStyle.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Chrome/CaptionButton.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Chrome/ResizeGripStyle.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Twitter/ConversationView.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Twitter/StatusListView.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Twitter/TimelineView.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/Twitter/StatusPopup.xaml" />
+		<ResourceDictionary Source="/Mukyutter;component/Themes/Mukyutter/ComposingTextBox.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

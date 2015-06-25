@@ -1,0 +1,98 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly Name="System.Core.dll" #>
+<#@ assembly name="Microsoft.VisualStudio.Shell.Interop.8.0" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE80" #>
+<#@ assembly name="VSLangProj" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE80" #>
+<#@ output extension=".cs" #>
+
+<# Prepare(); #>
+/*
+
+<#= testtext #>
+
+*/
+
+
+<#+
+
+string testtext = "";
+
+static string GenerateAttrFullName = "Grabacr07.Mukyutter.ViewModels.Internal.AutoGenerateAttribute";
+static IEnumerable<Project> Projects { get; set; }
+
+
+class ViewModelInfo
+{
+	public string Namespace { get; set; }
+	public string ClassName { get; set; }
+	public string TargetType { get; set; }
+}
+
+List<ViewModelInfo> ViewModels { get; set; }
+
+void Prepare()
+{
+	var servicProvider = Host as IServiceProvider;
+	var dte = servicProvider.GetService(typeof(DTE)) as DTE;
+
+	Projects = dte.Solution.Projects.OfType<Project>();
+
+	var currentProj = dte.Solution.FindProjectItem(Host.TemplateFile).ContainingProject;
+	var items = currentProj.ProjectItems.OfType<ProjectItem>();
+	
+	this.ViewModels = new List<ViewModelInfo>();
+
+	items.ToList().ForEach(i => this.FindViewModel(i));
+
+	this.ViewModels.ForEach(v => testtext = string.Format("{0}.{1} - {2}", v.Namespace, v.ClassName, v.TargetType));
+}
+
+void FindViewModel(ProjectItem item)
+{
+	foreach (ProjectItem subItem in item.ProjectItems)
+	{
+		this.FindViewModel(subItem);
+	}
+
+	if (item.FileCodeModel != null)
+	{
+        foreach (CodeNamespace ns in item.FileCodeModel.CodeElements.OfType<CodeNamespace>())
+        {
+			foreach (CodeClass type in ns.Members.OfType<CodeClass>())
+			{
+				/*
+				var attrs = type.Attributes.OfType<CodeAttribute>();
+				if (attrs.Any())
+				{
+					testtext += type.Name + "\r\n";
+				}*/
+
+				var attr = type.Attributes
+					.OfType<CodeAttribute>()
+					.FirstOrDefault(a => a.FullName == GenerateAttrFullName);
+
+				if (attr != null)
+				{
+					var elements = attr.Children.OfType<CodeElement>();
+					//var target = elements.FirstOrDefault(e => e.Name == "TargetTypeName");
+
+					this.ViewModels.Add(new ViewModelInfo() {
+						Namespace = ns.FullName, 
+						ClassName = type.Name, 
+						TargetType = "", });
+				}
+			}
+		}
+	}
+}
+
+#>

@@ -1,0 +1,60 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<Style x:Key="XButtonStyleKey"
+		   TargetType="{x:Type Button}">
+		<Setter Property="Background"
+				Value="Transparent" />
+		<Setter Property="Foreground"
+				Value="{DynamicResource ForegroundBrushKey}" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border x:Name="border"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+							Background="{TemplateBinding Background}">
+						<TextBlock x:Name="content"
+								   Text="r"
+								   FontFamily="Marlett"
+								   FontSize="18"
+								   Foreground="{TemplateBinding Foreground}"
+								   Margin="{TemplateBinding Padding}"
+								   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+								   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+								   TextOptions.TextFormattingMode="Display" />
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver"
+								 Value="True">
+							<Setter TargetName="border"
+									Property="Background"
+									Value="{DynamicResource HighlightBackgroundBrushKey}" />
+							<Setter TargetName="content"
+									Property="Foreground"
+									Value="{DynamicResource ActiveForegroundBrushKey}" />
+						</Trigger>
+						<Trigger Property="IsPressed"
+								 Value="True">
+							<Setter TargetName="border"
+									Property="Background"
+									Value="{DynamicResource AccentBrushKey}" />
+							<Setter TargetName="content"
+									Property="Foreground"
+									Value="{DynamicResource HighlightForegroundBrushKey}" />
+						</Trigger>
+						<Trigger Property="IsEnabled"
+								 Value="False">
+							<Setter TargetName="border"
+									Property="Background"
+									Value="Transparent" />
+							<Setter TargetName="content"
+									Property="Foreground"
+									Value="{DynamicResource InactiveForegroundBrushKey}" />
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>

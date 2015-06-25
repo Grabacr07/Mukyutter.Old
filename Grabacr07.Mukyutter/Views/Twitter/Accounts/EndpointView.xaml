@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="Grabacr07.Mukyutter.Views.Twitter.Accounts.EndpointView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:livet="http://schemas.livet-mvvm.net/2011/wpf"
+			 xmlns:metro="clr-namespace:Grabacr07.Mukyutter.Views.Chrome"
+			 xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+			 xmlns:behaviors="clr-namespace:Grabacr07.Mukyutter.Views.Behaviors"
+			 xmlns:composing="clr-namespace:Grabacr07.Mukyutter.Views.Composing"
+			 xmlns:acocuntsVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter.Accounts"
+			 mc:Ignorable="d"
+			 d:DesignHeight="223"
+			 d:DesignWidth="596">
+    <Grid>
+	</Grid>
+</UserControl>

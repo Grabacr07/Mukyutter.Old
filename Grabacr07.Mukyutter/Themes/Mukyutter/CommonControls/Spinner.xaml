@@ -1,0 +1,125 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:ec="http://schemas.microsoft.com/expression/2010/controls"
+					xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing"
+					xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+					xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls">
+
+	<!--<Style TargetType="{x:Type controls:Spinner}">
+		<Setter Property="Foreground"
+				Value="White" />
+		<Setter Property="SnapsToDevicePixels"
+				Value="True" />
+		<Setter Property="Width"
+				Value="16" />
+		<Setter Property="Height"
+				Value="16" />
+		<Setter Property="Margin"
+				Value="10" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type controls:Spinner}">
+					<Border Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+						<Border.Resources>
+							<Storyboard x:Key="Lotate"
+										RepeatBehavior="Forever">
+								<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)"
+															   Storyboard.TargetName="arc">
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.000"
+															Value="0" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.125"
+															Value="45" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.250"
+															Value="90" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.375"
+															Value="135" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.500"
+															Value="180" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.625"
+															Value="225" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.750"
+															Value="270" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:0.875"
+															Value="315" />
+									<DiscreteDoubleKeyFrame KeyTime="0:0:1.000"
+															Value="360" />
+								</DoubleAnimationUsingKeyFrames>
+							</Storyboard>
+						</Border.Resources>
+						<Border.Triggers>
+							<EventTrigger RoutedEvent="FrameworkElement.Loaded">
+								<BeginStoryboard Storyboard="{StaticResource Lotate}" />
+							</EventTrigger>
+						</Border.Triggers>
+						<Grid>
+							<ed:Arc x:Name="arc"
+									Opacity="0"
+									Fill="White"
+									ArcThickness="0"
+									ArcThicknessUnit="Pixel"
+									EndAngle="360"
+									Stretch="None"
+									StartAngle="0"
+									RenderTransformOrigin="0.5,0.5">
+								<ed:Arc.RenderTransform>
+									<TransformGroup>
+										<ScaleTransform />
+										<SkewTransform />
+										<RotateTransform />
+										<TranslateTransform />
+									</TransformGroup>
+								</ed:Arc.RenderTransform>
+							</ed:Arc>
+							<ec:PathListBox WrapItems="True">
+								<ec:PathListBox.LayoutPaths>
+									<ec:LayoutPath SourceElement="{Binding ElementName=arc}"
+												   Distribution="Even"
+												   Orientation="OrientToPath" />
+								</ec:PathListBox.LayoutPaths>
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="0.1" />
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="0.1" />
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="0.1" />
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="0.2" />
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="0.4" />
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="0.6" />
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="0.8" />
+								<Ellipse Fill="{TemplateBinding Foreground}"
+										 Style="{DynamicResource SpinnerDotStyleKey}"
+										 Opacity="1.0" />
+							</ec:PathListBox>
+						</Grid>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+
+	<Style x:Key="SpinnerDotStyleKey"
+		   TargetType="{x:Type Ellipse}">
+		<Setter Property="Width"
+				Value="5" />
+		<Setter Property="Height"
+				Value="5" />
+		<Setter Property="SnapsToDevicePixels"
+				Value="True" />
+	</Style>-->
+	
+</ResourceDictionary>

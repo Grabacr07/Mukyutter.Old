@@ -1,0 +1,245 @@
+﻿<UserControl x:Class="Grabacr07.Mukyutter.Views.Composing.Composer"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:livet="http://schemas.livet-mvvm.net/2011/wpf"
+			 xmlns:local="clr-namespace:Grabacr07.Mukyutter.Views.Composing"
+			 xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+			 xmlns:behaviors="clr-namespace:Grabacr07.Mukyutter.Views.Behaviors"
+			 xmlns:messaging="clr-namespace:Grabacr07.Mukyutter.Views.Behaviors.Messaging"
+			 xmlns:vm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Composing"
+			 mc:Ignorable="d"
+			 d:DesignWidth="500"
+			 SnapsToDevicePixels="True"
+			 TextOptions.TextFormattingMode="Display">
+	<d:DesignProperties.DataContext>
+		<vm:ComposerViewModel />
+	</d:DesignProperties.DataContext>
+
+	<i:Interaction.Triggers>
+		<livet:InteractionMessageTrigger Messenger="{Binding CurrentStatus.Messenger}"
+										 MessageKey="OpenMedia">
+			<livet:OpenFileDialogInteractionMessageAction />
+		</livet:InteractionMessageTrigger>
+	</i:Interaction.Triggers>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<local:ComposingTextBox Text="{Binding CurrentStatus.Text, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+								RemainingCharactersNum="{Binding CurrentStatus.RestLength, Mode=OneWay}"
+								MediaThumbs="{Binding CurrentStatus.Media}"
+								MediaThumbWidth="80"
+								Prompt=" ( ,,Ծ ‸ Ծ ) いまなにしてるの？"
+								FontFamily="Meiryo"
+								TextOptions.TextFormattingMode="Display"
+								AcceptsReturn="True"
+								TextWrapping="Wrap"
+								BorderThickness="0,1"
+								MaxHeight="200"
+								AllowDrop="True"
+								FocusVisualStyle="{x:Null}">
+			<i:Interaction.Behaviors>
+				<behaviors:KeyBindingBehavior BindingKey="UpdateStatus"
+											  MethodTarget="{Binding Mode=OneWay}"
+											  MethodName="Update"
+											  IsEnabled="{Binding CurrentStatus.CanUpdate}" />
+				<behaviors:KeyBindingBehavior BindingKey="OpenMedia"
+											  MethodTarget="{Binding CurrentStatus, Mode=OneWay}"
+											  MethodName="OpenMedia"
+											  IsEnabled="{Binding CurrentStatus.CanAddMedia}" />
+				<behaviors:KeyBindingBehavior BindingKey="ClearStatus"
+											  MethodTarget="{Binding CurrentStatus, Mode=OneWay}"
+											  MethodName="Clear" />
+			</i:Interaction.Behaviors>
+			<i:Interaction.Triggers>
+				<livet:InteractionMessageTrigger Messenger="{Binding CurrentStatus.Messenger}"
+												 MessageKey="SetCaretIndex">
+					<messaging:SetCaretAction />
+				</livet:InteractionMessageTrigger>
+				<livet:InteractionMessageTrigger Messenger="{Binding CurrentStatus.Messenger}"
+												 MessageKey="SelectText">
+					<messaging:SelectTextAction />
+				</livet:InteractionMessageTrigger>
+				<livet:InteractionMessageTrigger Messenger="{Binding CurrentStatus.Messenger}"
+												 MessageKey="InputFocus">
+					<livet:SetFocusAction />
+				</livet:InteractionMessageTrigger>
+				<i:EventTrigger EventName="ClearRequested">
+					<livet:LivetCallMethodAction MethodTarget="{Binding CurrentStatus, Mode=OneWay}"
+												 MethodName="Clear" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</local:ComposingTextBox>
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<controls:PromptComboBox Grid.Column="2"
+									 Prompt=" フッター"
+									 FontFamily="Meiryo"
+									 Width="120"
+									 Margin="5,5,0,0"
+									 Text="{Binding Footer}"
+									 IsEditable="True"
+									 IsEnabled="{Binding FooterEnabled}" />
+			<Button Grid.Column="3"
+					Margin="5,5,0,0"
+					Padding="12,0"
+					IsEnabled="{Binding CurrentStatus.CanAddMedia, Mode=OneWay}">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<livet:LivetCallMethodAction MethodTarget="{Binding CurrentStatus, Mode=OneWay}"
+													 MethodName="OpenMedia" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+				<Path Style="{DynamicResource CameraIconKey}"
+					  Width="20"
+					  Height="14"
+					  Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" />
+			</Button>
+			<Button Grid.Column="4"
+					BorderThickness="1,1,0,1"
+					Padding="20,2"
+					Margin="5,5,0,0"
+					IsEnabled="{Binding CurrentStatus.CanUpdate}">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<livet:LivetCallMethodAction MethodTarget="{Binding Mode=OneWay}"
+													 MethodName="Update" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+				<Path Style="{DynamicResource TwitterBirdIconKey}"
+					  Width="24"
+					  Height="16"
+					  Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" />
+			</Button>
+		</Grid>
+		<ItemsControl Grid.Row="2"
+					  ItemsSource="{Binding NewStatuses}">
+			<ItemsControl.Template>
+				<ControlTemplate TargetType="{x:Type ItemsControl}">
+					<StackPanel IsItemsHost="True" />
+				</ControlTemplate>
+			</ItemsControl.Template>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate DataType="{x:Type vm:NewStatusViewModel}">
+					<Border x:Name="root"
+						  SnapsToDevicePixels="True"
+						  Background="Transparent"
+						  Margin="0,5,0,0">
+					<Grid Margin="5,2" >
+						<Grid.Resources>
+							<Style TargetType="{x:Type TextBlock}">
+								<Setter Property="Margin"
+										Value="0" />
+								<Setter Property="VerticalAlignment"
+										Value="Center" />
+								<Setter Property="Foreground"
+										Value="{DynamicResource ActiveForegroundBrushKey}" />
+								<Setter Property="TextTrimming"
+										Value="CharacterEllipsis" />
+							</Style>
+						</Grid.Resources>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition Height="1" />
+							<RowDefinition Height="Auto" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition />
+							<ColumnDefinition Width="5" />
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+
+						<Rectangle x:Name="errorAreDummy" Grid.Column="1" Grid.ColumnSpan="4" Fill="Transparent" />
+						<TextBlock Grid.Column="0"
+								   Grid.Row="0"
+								   Text="Error: "
+								   Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" />
+						<controls:ExpanderButton x:Name="expander"
+												 Grid.Column="1"
+												 Grid.Row="0"
+												 Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+							<TextBlock Text="{Binding ErrorMessage, Mode=OneWay}"
+									   ToolTip="{Binding ErrorMessage, Mode=OneWay}"
+									   ToolTipService.Placement="Relative"
+									   ToolTipService.HorizontalOffset="-7"
+									   ToolTipService.VerticalOffset="-5" />
+						</controls:ExpanderButton>
+						<Popup PlacementTarget="{Binding ElementName=expander}"
+							   IsOpen="{Binding IsChecked, ElementName=expander}"
+							   StaysOpen="False"
+							   AllowsTransparency="True"
+							   MaxWidth="{Binding ActualWidth, ElementName=errorAreDummy, Mode=OneWay}"
+							   MaxHeight="200" PopupAnimation="Fade">
+							<TextBox Text="{Binding Exception, Mode=OneWay}"
+													Style="{DynamicResource FlatTextBoxStyleKey}"
+													Margin="0,3,0,0" />
+						</Popup>
+						
+						<TextBlock Grid.Column="0"
+								   Grid.Row="2"
+								   Text="Updating: "
+								   Visibility="{Binding IsUpdating, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" 
+								   VerticalAlignment="Top" />
+						<TextBlock Grid.Column="1"
+								   Grid.Row="2"
+								   Text="{Binding FlatText}"
+								   Foreground="{DynamicResource InactiveForegroundBrushKey}"
+								   VerticalAlignment="Top" />
+						
+						
+						<Button Grid.Column="3" Grid.Row="0" Content="再実行"
+								   Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="Click">
+									<livet:LivetCallMethodAction MethodTarget="{Binding Mode=OneWay}" MethodName="Retry"/>
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</Button>
+						<Button Grid.Column="3" Grid.Row="2" Content="編集"
+								   Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="Click">
+									<livet:LivetCallMethodAction MethodTarget="{Binding Mode=OneWay}" MethodName="Edit"/>
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</Button>
+						<Button Grid.Column="4" Grid.Row="0" Grid.RowSpan="3" Style="{DynamicResource XButtonStyleKey}" 
+								   Visibility="{Binding IsError, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+								   Margin="5,1,0,1">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="Click">
+									<livet:LivetCallMethodAction MethodTarget="{Binding Mode=OneWay}" MethodName="Delete"/>
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</Button>
+					</Grid>
+					</Border>
+					<DataTemplate.Triggers>
+						<DataTrigger Binding="{Binding IsUpdating}" Value="True">
+						</DataTrigger>
+						<DataTrigger Binding="{Binding IsError}" Value="True">
+							<Setter TargetName="root"
+									Property="Background"
+									Value="#FF502D30" />
+						</DataTrigger>
+					</DataTemplate.Triggers>
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+	</Grid>
+</UserControl>

@@ -1,0 +1,25 @@
+﻿<!--
+      *********    このファイルを編集しないでください     *********
+      このファイルはデザイン ツールにより作成されました。
+      このファイルに変更を加えるとエラーが発生する場合があります。
+-->
+<SampleData:SampleStatus xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.SampleStatus" IsSelf="True">
+	<SampleData:SampleStatus.DisplayStatus>
+		<SampleData:DisplayStatus Client="A. Datum Corporation" RelativeDateTime="8:20:14 AM" AbsoluteDateTime="November 5, 2003">
+			<SampleData:DisplayStatus.User>
+				<SampleData:User Name="Aaberg, Jesper" ScreenName="Aaberg, Jesper" ScreenNameWithAtmark="Aaberg, Jesper">
+					<SampleData:User.Icon>
+						<SampleData:Icon Image="SampleStatus_Files\image01.png"/>
+					</SampleData:User.Icon>
+				</SampleData:User>
+			</SampleData:DisplayStatus.User>
+			<SampleData:DisplayStatus.RichText>
+				<SampleData:RichTextItem Text="Class aenean nam"/>
+				<SampleData:RichTextItem Text="Cras sed mauris curae"/>
+				<SampleData:RichTextItem Text="Nullam maecenas"/>
+				<SampleData:RichTextItem Text="Praesent accumsan aptent duis"/>
+				<SampleData:RichTextItem Text="Aliquam nunc bibendum amet"/>
+			</SampleData:DisplayStatus.RichText>
+		</SampleData:DisplayStatus>
+	</SampleData:SampleStatus.DisplayStatus>
+</SampleData:SampleStatus>

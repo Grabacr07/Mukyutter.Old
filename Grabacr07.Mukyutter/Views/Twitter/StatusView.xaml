@@ -1,0 +1,187 @@
+﻿<UserControl x:Class="Grabacr07.Mukyutter.Views.Twitter.StatusView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+			 xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+			 xmlns:twitter="clr-namespace:Grabacr07.Mukyutter.Views.Twitter"
+			 xmlns:twitterVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter"
+			 xmlns:sampleData="clr-namespace:Grabacr07.Mukyutter.SampleData"
+			 xmlns:primitives="clr-namespace:Grabacr07.Mukyutter.Views.Twitter.Primitives"
+			 mc:Ignorable="d"
+			 d:DesignWidth="400"
+			 SnapsToDevicePixels="True"
+			 TextOptions.TextFormattingMode="Display">
+	<d:DesignProperties.DataContext>
+		<sampleData:SampleStatusViewModel />
+	</d:DesignProperties.DataContext>
+
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+		<converters:InvBooleanToVisibilityConverter x:Key="InvBooleanToVisibilityConverter" />
+
+		<Style x:Key="SubTextStyleKey"
+			   TargetType="{x:Type TextBlock}">
+			<Setter Property="Foreground"
+					Value="{DynamicResource ForegroundBrushKey}" />
+			<Setter Property="FontSize"
+					Value="11" />
+		</Style>
+	</UserControl.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="48" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Image Width="48"
+				   Height="48"
+				   VerticalAlignment="Top"
+				   Source="{Binding DisplayStatus.User.Icon.Image, Mode=OneWay}" />
+
+			<StackPanel Grid.Column="1">
+				<Grid Margin="8,0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="5" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+					<controls:LinkButton Grid.Column="2"
+										 Text="{Binding AbsoluteDateTime, Mode=OneWay}"
+										 FontSize="11">
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="Click">
+								<ei:CallMethodAction TargetObject="{Binding DisplayStatus}"
+													 MethodName="OpenStatusPage" />
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</controls:LinkButton>
+
+					<StackPanel Orientation="Horizontal">
+						<twitter:TwitterIcon Type="PadLock"
+											 Margin="0,0,5,0"
+											 Visibility="{Binding User.Protected, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}" />
+						<controls:LinkButton Text="{Binding DisplayStatus.User.Name, Mode=OneWay}"
+											 FontSize="13.333"
+											 Margin="0,0,3,0" />
+						<controls:LinkButton Text="{Binding DisplayStatus.User.ScreenNameWithAtmark, Mode=OneWay}"
+											 TextTrimming="CharacterEllipsis"
+											 Foreground="{DynamicResource ForegroundBrushKey}"
+											 VerticalAlignment="Bottom" />
+					</StackPanel>
+				</Grid>
+
+				<controls:RichTextView Grid.Row="1"
+									   Margin="8,6"
+									   Source="{Binding DisplayStatus.RichText}">
+					<!-- #region DataTemplates -->
+					<DataTemplate DataType="{x:Type controls:Regular}">
+						<controls:RichTextInlinePresenter>
+							<Run Foreground="{DynamicResource ActiveForegroundBrushKey}"
+								 FontFamily="Meiryo UI"
+								 Text="{Binding Text}"
+								 FontSize="12" />
+						</controls:RichTextInlinePresenter>
+					</DataTemplate>
+					<DataTemplate DataType="{x:Type controls:Url}">
+						<controls:RichTextInlinePresenter>
+							<Hyperlink Cursor="Hand"
+									   Foreground="{DynamicResource LinkForegroundBrushKey}"
+									   FontFamily="Meiryo UI"
+									   FontSize="12">
+								<i:Interaction.Triggers>
+									<i:EventTrigger EventName="MouseLeftButtonDown">
+										<ei:CallMethodAction MethodName="Click"
+															 TargetObject="{Binding}" />
+									</i:EventTrigger>
+								</i:Interaction.Triggers>
+								<Run Text="{Binding Text}" />
+							</Hyperlink>
+						</controls:RichTextInlinePresenter>
+					</DataTemplate>
+					<DataTemplate DataType="{x:Type controls:Mention}">
+						<controls:RichTextInlinePresenter>
+							<Hyperlink Cursor="Hand"
+									   Foreground="{DynamicResource LinkForegroundBrushKey}"
+									   FontFamily="Meiryo UI"
+									   FontSize="12">
+								<i:Interaction.Triggers>
+									<i:EventTrigger EventName="MouseLeftButtonDown">
+										<ei:CallMethodAction MethodName="Click"
+															 TargetObject="{Binding}" />
+									</i:EventTrigger>
+								</i:Interaction.Triggers>
+								<Run Text="{Binding Text}" />
+							</Hyperlink>
+						</controls:RichTextInlinePresenter>
+					</DataTemplate>
+					<DataTemplate DataType="{x:Type controls:Hashtag}">
+						<controls:RichTextInlinePresenter>
+							<Hyperlink Cursor="Hand"
+									   Foreground="{DynamicResource LinkForegroundBrushKey}"
+									   FontFamily="Meiryo UI"
+									   FontSize="12">
+								<i:Interaction.Triggers>
+									<i:EventTrigger EventName="MouseLeftButtonDown">
+										<ei:CallMethodAction MethodName="Click"
+															 TargetObject="{Binding}" />
+									</i:EventTrigger>
+								</i:Interaction.Triggers>
+								<Run Text="{Binding Text}" />
+							</Hyperlink>
+						</controls:RichTextInlinePresenter>
+					</DataTemplate>
+					<!-- #endregion DataTemplates -->
+				</controls:RichTextView>
+
+				<Grid Margin="8,0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="8" />
+						<ColumnDefinition Width="Auto" />
+					</Grid.ColumnDefinitions>
+
+					<Grid Visibility="{Binding IsRetweet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="Auto" />
+							<RowDefinition />
+						</Grid.RowDefinitions>
+						<Rectangle Height="1"
+								   Fill="Gray"
+								   Margin="0,1,0,4"
+								   Width="{Binding ActualWidth, ElementName=retweetedLabel, Mode=OneWay}"
+								   HorizontalAlignment="Left" />
+						<StackPanel x:Name="retweetedLabel"
+									Grid.Row="1"
+									Orientation="Horizontal"
+									Visibility="{Binding IsRetweet, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+									HorizontalAlignment="Left"
+									VerticalAlignment="Top">
+							<twitter:TwitterIcon Type="Retweet"
+												 VerticalAlignment="Center" />
+							<TextBlock Text=" Retweeted by "
+									   Style="{DynamicResource SubTextStyleKey}"
+									   VerticalAlignment="Center" />
+							<controls:LinkButton Text="{Binding User.Name, Mode=OneWay}"
+												 FontSize="11"
+												 HorizontalAlignment="Left"
+												 VerticalAlignment="Center" />
+						</StackPanel>
+					</Grid>
+					<primitives:StatusController Grid.Column="3"
+												 VerticalAlignment="Bottom"
+												 Visibility="{Binding CanControl, ConverterParameter=Visibie:Hidden, Converter={StaticResource UniversalBooleanToVisibilityConverter}, ElementName=userControl}" />
+				</Grid>
+			</StackPanel>
+		</Grid>
+	</Grid>
+</UserControl>

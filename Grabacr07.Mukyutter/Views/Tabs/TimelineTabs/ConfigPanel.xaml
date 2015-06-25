@@ -1,0 +1,285 @@
+﻿<UserControl x:Class="Grabacr07.Mukyutter.Views.Tabs.TimelineTabs.ConfigPanel"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:livet="http://schemas.livet-mvvm.net/2011/wpf"
+			 xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+			 xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+			 xmlns:twitter="clr-namespace:Grabacr07.Mukyutter.Views.Twitter"
+			 xmlns:tabsVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Tabs.TimelineTabs"
+			 xmlns:timelineTabs="clr-namespace:Grabacr07.Mukyutter.Views.Tabs.TimelineTabs"
+			 xmlns:accountsVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter.Accounts"
+			 mc:Ignorable="d"
+			 d:DesignWidth="500"
+			 SnapsToDevicePixels="True"
+			 TextOptions.TextFormattingMode="Display">
+	<d:DesignProperties.DataContext>
+		<tabsVm:TimelineTabViewModel />
+	</d:DesignProperties.DataContext>
+
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<Style x:Key="ConfigElementTextBlockStyleKey"
+				   TargetType="{x:Type TextBlock}">
+				<Setter Property="Foreground"
+						Value="{DynamicResource ActiveForegroundBrushKey}" />
+				<Setter Property="VerticalAlignment"
+						Value="Center" />
+				<Setter Property="Margin"
+						Value="0,2,5,2" />
+			</Style>
+			<Style x:Key="ConfigElementTextBoxStyleKey"
+				   TargetType="{x:Type controls:PromptTextBox}">
+				<Setter Property="Prompt"
+						Value="" />
+				<Setter Property="Margin"
+						Value="0,1" />
+				<Setter Property="Padding"
+						Value="1,2" />
+			</Style>
+			<Style x:Key="LineGridStyleKey"
+				   TargetType="{x:Type Grid}">
+				<Setter Property="Margin"
+						Value="0,5" />
+			</Style>
+			<Style x:Key="ConfigElementRadioButtonStyleKey"
+				   TargetType="{x:Type RadioButton}"
+				   BasedOn="{StaticResource {x:Type RadioButton}}">
+				<Setter Property="Foreground"
+						Value="{DynamicResource ActiveForegroundBrushKey}" />
+				<Setter Property="VerticalAlignment"
+						Value="Center" />
+				<Setter Property="VerticalContentAlignment"
+						Value="Center" />
+				<Setter Property="Margin"
+						Value="0,4,0,2" />
+			</Style>
+		</ResourceDictionary>
+	</UserControl.Resources>
+
+	<StackPanel Grid.IsSharedSizeScope="True">
+		<TextBlock Text="Timeline tab settings"
+				   Margin="0,0,0,5"
+				   Style="{DynamicResource HeaderTextBlockStyleKey}" />
+
+		<Grid Style="{DynamicResource LineGridStyleKey}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition SharedSizeGroup="itemName" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0"
+					   Text="タイトル: "
+					   Style="{DynamicResource ConfigElementTextBlockStyleKey}" />
+			<controls:PromptTextBox Grid.Column="1"
+									Prompt="タブのタイトルを入力"
+									Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+									Style="{DynamicResource ConfigElementTextBoxStyleKey}" />
+		</Grid>
+
+		<Grid Style="{DynamicResource LineGridStyleKey}"
+			  DataContext="{Binding ConfigPanel}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition SharedSizeGroup="itemName" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0"
+					   Text="アカウント:  "
+					   Style="{DynamicResource ConfigElementTextBlockStyleKey}"
+					   VerticalAlignment="Top" />
+			<controls:PromptComboBox Grid.Row="1"
+									 Grid.Column="1"
+									 ItemsSource="{x:Static accountsVm:AccountViewModel.Accounts}"
+									 SelectedValue="{Binding CurrentAccount, Mode=TwoWay}"
+									 Prompt="確認できないアカウント"
+									 Margin="0,3"
+									 Padding="2,3"
+									 HorizontalAlignment="Left">
+				<controls:PromptComboBox.ItemTemplate>
+					<DataTemplate DataType="{x:Type accountsVm:AccountViewModel}">
+						<StackPanel Orientation="Horizontal">
+							<Image Source="{Binding User.Icon.Image}"
+								   Width="20"
+								   Height="20"
+								   Margin="2" />
+							<TextBlock Text="{Binding User.ScreenNameWithAtmark}"
+									   Foreground="{DynamicResource ActiveForegroundBrushKey}"
+									   Margin="3,0"
+									   FontSize="16" />
+							<TextBlock Text="{Binding User.Name}"
+									   Foreground="{DynamicResource ForegroundBrushKey}"
+									   Margin="3,3,3,0" />
+						</StackPanel>
+					</DataTemplate>
+				</controls:PromptComboBox.ItemTemplate>
+			</controls:PromptComboBox>
+			<TextBlock Grid.Column="3"
+					   Text="このタブでの投稿やリツイートに使用するアカウントを選択します。"
+					   Style="{DynamicResource ConfigElementTextBlockStyleKey}"
+					   Foreground="{DynamicResource ForegroundBrushKey}"
+					   TextWrapping="Wrap"
+					   VerticalAlignment="Top" />
+		</Grid>
+
+		<Grid Style="{DynamicResource LineGridStyleKey}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition SharedSizeGroup="itemName" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Column="0"
+					   Text="未読通知:  "
+					   Style="{DynamicResource ConfigElementTextBlockStyleKey}" />
+			<CheckBox Grid.Column="1"
+					  Content="未読カウントの表示"
+					  IsChecked="{Binding ConfigPanel.IsUnreadCountDisplaying}" />
+			<CheckBox Grid.Column="2"
+					  Content="新着の通知"
+					  Margin="30,0,0,0"
+					  IsChecked="{Binding ConfigPanel.IsNotified}" />
+		</Grid>
+
+		<!--<Grid Style="{DynamicResource LineGridStyleKey}">
+			<Rectangle Height="1"
+					   Fill="{DynamicResource InactiveForegroundBrushKey}" />
+		</Grid>-->
+
+
+		<Grid Style="{DynamicResource LineGridStyleKey}"
+			  DataContext="{Binding ConfigPanel}">
+			<i:Interaction.Triggers>
+				<livet:InteractionMessageTrigger Messenger="{Binding Messenger}"
+												 MessageKey="Show/ReceivingSettings">
+					<livet:TransitionInteractionMessageAction WindowType="{x:Type timelineTabs:ReceivingSettingsWindow}"
+															  IsOwned="True" />
+				</livet:InteractionMessageTrigger>
+			</i:Interaction.Triggers>
+
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition SharedSizeGroup="itemName" />
+				<ColumnDefinition Width="75" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<TextBlock Grid.Column="0"
+					   Text="受信対象: "
+					   Style="{DynamicResource ConfigElementTextBlockStyleKey}"
+					   VerticalAlignment="Top" />
+
+			<TextBlock Grid.Column="1"
+					   Grid.ColumnSpan="2"
+					   Text="{Binding ReceivingSettings}"
+					   Style="{DynamicResource ConfigElementTextBlockStyleKey}"
+					   TextWrapping="Wrap"
+					   VerticalAlignment="Top" />
+
+			<Button Grid.Row="1"
+					Grid.Column="1"
+					Content="設定"
+					Margin="0,5,0,3">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<ei:CallMethodAction TargetObject="{Binding}"
+											 MethodName="ShowReceivingSettings" />
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</Button>
+		</Grid>
+
+
+		<!--<Grid Style="{DynamicResource LineGridStyleKey}">
+			<Rectangle Height="1"
+					   Fill="{DynamicResource InactiveForegroundBrushKey}" />
+		</Grid>-->
+
+
+		<Grid Style="{DynamicResource LineGridStyleKey}"
+			  DataContext="{Binding ConfigPanel}">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition SharedSizeGroup="itemName" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+			<TextBlock Grid.Row="0"
+					   Grid.Column="0"
+					   Text="フィルター: "
+					   Style="{DynamicResource ConfigElementTextBlockStyleKey}"
+					   VerticalAlignment="Top"
+					   Padding="0,3,0,0" />
+			<controls:EditBox Grid.Row="0"
+							  Grid.Column="1"
+							  Text="{Binding FilterQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+							  Prompt="タブのフィルターを入力"
+							  EmptyText="(フィルターは設定されていません)"
+							  IsEdit="{Binding IsEdit}"
+							  AcceptsReturn="True"
+							  TextWrapping="Wrap"
+							  MaxHeight="100"
+							  Padding="1,2" />
+			<Grid Grid.Row="1"
+				  Grid.Column="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="75" />
+					<ColumnDefinition Width="3" />
+					<ColumnDefinition Width="75" />
+					<ColumnDefinition Width="6" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<Button Grid.Column="0"
+						Content="編集"
+						Margin="0,3">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="Click">
+							<ei:CallMethodAction TargetObject="{Binding}"
+												 MethodName="StartEditing" />
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</Button>
+				<Button Grid.Column="0"
+						Content="適用"
+						Margin="0,3"
+						IsEnabled="{Binding CanCreateFilter}"
+						Visibility="{Binding EditElementVisibility}">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="Click">
+							<ei:CallMethodAction TargetObject="{Binding}"
+												 MethodName="ApplyFilter" />
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</Button>
+				<Button Grid.Column="2"
+						Content="キャンセル"
+						Margin="0,3"
+						Visibility="{Binding EditElementVisibility}">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="Click">
+							<ei:CallMethodAction TargetObject="{Binding}"
+												 MethodName="EndEditing" />
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</Button>
+
+				<TextBlock Grid.Column="4"
+						   Text="{Binding FilterMessage, Mode=OneWay}"
+						   TextTrimming="CharacterEllipsis"
+						   Visibility="{Binding EditElementVisibility}"
+						   Style="{DynamicResource ConfigElementTextBlockStyleKey}" />
+			</Grid>
+		</Grid>
+	</StackPanel>
+</UserControl>

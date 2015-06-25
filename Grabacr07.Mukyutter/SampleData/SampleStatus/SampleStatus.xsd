@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+      *********    このファイルを編集しないでください     *********
+      このファイルはデザイン ツールにより作成されました。
+      このファイルに変更を加えるとエラーが発生する場合があります。
+-->
+<xs:schema xmlns:blend="http://schemas.microsoft.com/expression/blend/2008" xmlns:tns="Expression.Blend.SampleData.SampleStatus" targetNamespace="Expression.Blend.SampleData.SampleStatus" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="SampleStatus" type="tns:SampleStatus" />
+  <xs:complexType name="SampleStatus">
+    <xs:sequence>
+      <xs:element name="DisplayStatus" type="tns:DisplayStatus" />
+    </xs:sequence>
+    <xs:attribute name="IsSelf" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="DisplayStatus">
+    <xs:sequence>
+      <xs:element name="User" type="tns:User" />
+      <xs:element name="RichText" type="tns:RichText" />
+    </xs:sequence>
+    <xs:attribute blend:Format="会社名" name="Client" type="xs:string" />
+    <xs:attribute blend:Format="時刻" name="RelativeDateTime" type="xs:string" />
+    <xs:attribute blend:Format="日付" name="AbsoluteDateTime" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="User">
+    <xs:sequence>
+      <xs:element name="Icon" type="tns:Icon" />
+    </xs:sequence>
+    <xs:attribute blend:Format="名前" name="Name" type="xs:string" />
+    <xs:attribute blend:Format="名前" name="ScreenName" type="xs:string" />
+    <xs:attribute blend:Format="名前" name="ScreenNameWithAtmark" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Icon">
+    <xs:attribute blend:FormatParameters="C:\Program Files (x86)\Microsoft Expression\Blend 4\SampleDataResources\ja\Images" name="Image" type="tns:Basic-Image" />
+  </xs:complexType>
+  <xs:simpleType name="Basic-Image">
+    <xs:restriction base="xs:anyURI" />
+  </xs:simpleType>
+  <xs:complexType name="RichText">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" name="RichTextItem" type="tns:RichTextItem" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RichTextItem">
+    <xs:attribute name="Text" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

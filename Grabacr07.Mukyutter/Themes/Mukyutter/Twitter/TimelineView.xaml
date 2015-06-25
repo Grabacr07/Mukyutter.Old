@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+					xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+					xmlns:controls="clr-namespace:Grabacr07.Mukyutter.Views.Controls"
+					xmlns:converters="clr-namespace:Grabacr07.Mukyutter.Views.Converters"
+					xmlns:twitter="clr-namespace:Grabacr07.Mukyutter.Views.Twitter"
+					xmlns:twitterVm="clr-namespace:Grabacr07.Mukyutter.ViewModels.Twitter">
+
+	<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+	<converters:UniversalBooleanToVisibilityConverter x:Key="UniversalBooleanToVisibilityConverter" />
+
+	<Style TargetType="{x:Type twitter:TimelineView}">
+		<Setter Property="SnapsToDevicePixels"
+				Value="True" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type twitter:TimelineView}">
+					<ControlTemplate.Resources>
+						<!--<CollectionViewSource x:Key="DefaultViewSource"
+											  Source="{Binding CollectionView, RelativeSource={RelativeSource TemplatedParent}}">
+							<CollectionViewSource.SortDescriptions>
+								<componentModel:SortDescription PropertyName="Id"
+																Direction="Descending" />
+							</CollectionViewSource.SortDescriptions>
+						</CollectionViewSource>
+						<CollectionViewSource x:Key="FilterViewSource"
+											  Source="{Binding FilteringCollectionView, RelativeSource={RelativeSource TemplatedParent}}">
+							<CollectionViewSource.SortDescriptions>
+								<componentModel:SortDescription PropertyName="Id"
+																Direction="Descending" />
+							</CollectionViewSource.SortDescriptions>
+						</CollectionViewSource>-->
+					</ControlTemplate.Resources>
+
+					<Border Background="{TemplateBinding Background}"
+							BorderBrush="{TemplateBinding BorderBrush}"
+							BorderThickness="{TemplateBinding BorderThickness}"
+							SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+						<Grid>
+							<twitter:StatusListView Grid.Row="2"
+													ItemsSource="{TemplateBinding CollectionView}"
+													Visibility="{Binding IsFiltering, ConverterParameter=Hidden:Visible, Converter={StaticResource UniversalBooleanToVisibilityConverter}, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"
+													SelectedItem="{Binding SelectedStatus, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type twitter:TimelineView}}}">
+							</twitter:StatusListView>
+
+							<twitter:StatusListView Grid.Row="2"
+													ItemsSource="{TemplateBinding FilteringCollectionView}"
+													Visibility="{Binding IsFiltering, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+						</Grid>
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>
